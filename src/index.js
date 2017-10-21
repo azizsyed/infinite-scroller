@@ -1,4 +1,5 @@
-import pkg from '../package.json';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/App';
 
-console.log('coming soon...');
-console.log(pkg);
+ReactDOM.render(<App />, document.getElementById('root'));
