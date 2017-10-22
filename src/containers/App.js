@@ -1,5 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
+import MessageObject from '../schema/Message';
 
 import Header from '../components/Header';
 import Messages from '../components/Messages';
@@ -17,6 +18,77 @@ const theme = {
 };
 
 class App extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      messages: [
+        new MessageObject({
+          user: {
+            name: 'Name',
+            profilePic: '/some/path',
+          },
+          timestamp: 'Since',
+          id: 'id1',
+          content: 'hey yo!',
+        }),
+        new MessageObject({
+          user: {
+            name: 'Name2',
+            profilePic: '/some/path',
+          },
+          timestamp: 'Since',
+          id: 'id2',
+          content: 'hey yo 2!',
+        }),
+        new MessageObject({
+          user: {
+            name: 'Name3',
+            profilePic: '/some/path',
+          },
+          timestamp: 'Since',
+          id: 'id3',
+          content: 'hey yo 3!',
+        }),
+        new MessageObject({
+          user: {
+            name: 'Name3',
+            profilePic: '/some/path',
+          },
+          timestamp: 'Since',
+          id: 'id3',
+          content: 'hey yo 3!',
+        }),
+        new MessageObject({
+          user: {
+            name: 'Name3',
+            profilePic: '/some/path',
+          },
+          timestamp: 'Since',
+          id: 'id3',
+          content: 'hey yo 3!',
+        }),
+        new MessageObject({
+          user: {
+            name: 'Name3',
+            profilePic: '/some/path',
+          },
+          timestamp: 'Since',
+          id: 'id3',
+          content: 'hey yo 3!',
+        }),
+        new MessageObject({
+          user: {
+            name: 'Name3',
+            profilePic: '/some/path',
+          },
+          timestamp: 'Since',
+          id: 'id3',
+          content: 'hey yo 3!',
+        }),
+      ],
+    };
+  }
+
   shouldComponentUpdate() {
     return true;
   }
@@ -26,7 +98,7 @@ class App extends React.Component {
       <ThemeProvider theme={theme}>
         <div>
           <Header />
-          <Messages />
+          <Messages messages={this.state.messages} />
         </div>
       </ThemeProvider>
     );

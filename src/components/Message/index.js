@@ -1,35 +1,31 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Grid, Col, Row } from 'react-styled-flexboxgrid';
-import { withProps } from 'recompose';
 import Avatar from '../Avatar';
-import MessageObject from '../../schema/Message';
 
-export const Message = ({ content, id, timestamp, user, onSelect, onDelete }) => (
+export const Message = ({ message, onSelect, onDelete }) => (
   <Grid fluid>
-    <Row onClick={() => alert(id)}>
-      <Col xs={3}><Avatar path={user.profilePic} /></Col>
+    <Row onClick={() => onSelect(message.id)}>
+      <Col xs={3}><Avatar path={message.user.profilePic} /></Col>
       <Col xs={9}>
-        <p>{user.name}</p>
-        <p>{timestamp}</p>
+        <p>{message.user.name}</p>
+        <p>{message.timestamp}</p>
       </Col>
     </Row>
     <Row>
-      <Col xs={12}>{content}</Col>
+      <Col xs={12}>
+        {message.content}
+        <button onClick={() => onDelete(message.id)}>delete</button>
+      </Col>
     </Row>
   </Grid>
 );
 
-const enhance = withProps(new MessageObject({
-  user: {
-    name: 'Name',
-    profilePic: '/some/path',
-  },
-  timestamp: 'Since',
-  id: 'id',
-  content: 'hey yo!',
-}));
+Message.propTypes = {
+  message: PropTypes.object.isRequired,
+  onSelect: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
 
-const enhanced = enhance(Message);
-
-export default enhanced;
+export default Message;
