@@ -4,19 +4,18 @@ import { HEADER_HEIGHT } from '../../constants/styles';
 
 const H1 = styled.h1`
   font-size: 1.5em;
-  color: palevioletred;
+  color: white;
   display: ${props => (props.inline ? 'inline-block' : 'block')};
   margin: 0;
   padding: 0;
-  line-height: ${HEADER_HEIGHT};
 `;
 
 const Icon = styled.span`
   display: inline-block;
-  height: 20px;
-  width: 20px;
-  padding-right: 20px;
-  background-color: orange;
+  height: 12px;
+  width: 18px;
+  margin-right: 29px;
+  background-color: white;
 `;
 
 const Header = styled.header`
@@ -25,6 +24,9 @@ const Header = styled.header`
   height: ${HEADER_HEIGHT};
   top: 0;
   width: 100vw;
+  padding-left: 19px;
+  display: flex;
+  align-items: center;
 `;
 
 export default () => (

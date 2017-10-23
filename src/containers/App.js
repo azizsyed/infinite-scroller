@@ -1,12 +1,15 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
-import MessageObject from '../schema/Message';
+import { createMockMessage } from '../schema/transformer';
 
 import Header from '../components/Header';
 import Messages from '../components/Messages';
 
+import request from 'request';
+
 const theme = {
   flexboxgrid: {
+    gutterWidth: 0, // rem
     outerMargin: 0, // rem
     // breakpoints: {
     //   xs: 0,  // em
@@ -22,67 +25,53 @@ class App extends React.Component {
     super();
     this.state = {
       messages: [
-        new MessageObject({
+        createMockMessage({
           user: {
             name: 'Name',
             profilePic: '/some/path',
           },
-          timestamp: 'Since',
-          id: 'id1',
           content: 'hey yo!',
         }),
-        new MessageObject({
+        createMockMessage({
           user: {
             name: 'Name2',
             profilePic: '/some/path',
           },
-          timestamp: 'Since',
-          id: 'id2',
           content: 'hey yo 2!',
         }),
-        new MessageObject({
+        createMockMessage({
           user: {
             name: 'Name3',
             profilePic: '/some/path',
           },
-          timestamp: 'Since',
-          id: 'id3',
           content: 'hey yo 3!',
         }),
-        new MessageObject({
+        createMockMessage({
           user: {
             name: 'Name3',
             profilePic: '/some/path',
           },
-          timestamp: 'Since',
-          id: 'id3',
           content: 'hey yo 3!',
         }),
-        new MessageObject({
+        createMockMessage({
           user: {
             name: 'Name3',
             profilePic: '/some/path',
           },
-          timestamp: 'Since',
-          id: 'id3',
           content: 'hey yo 3!',
         }),
-        new MessageObject({
+        createMockMessage({
           user: {
             name: 'Name3',
             profilePic: '/some/path',
           },
-          timestamp: 'Since',
-          id: 'id3',
           content: 'hey yo 3!',
         }),
-        new MessageObject({
+        createMockMessage({
           user: {
             name: 'Name3',
             profilePic: '/some/path',
           },
-          timestamp: 'Since',
-          id: 'id3',
           content: 'hey yo 3!',
         }),
       ],
@@ -91,6 +80,14 @@ class App extends React.Component {
 
   shouldComponentUpdate() {
     return true;
+  }
+
+  componentDidMount() {
+    this.requestMessages();
+  }
+
+  requestMessages() {
+
   }
 
   render() {

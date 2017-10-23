@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Grid, Col, Row } from 'react-styled-flexboxgrid';
 import Avatar from '../Avatar';
+import Timestamp from '../Timestamp';
 
 export const Message = ({ message, onSelect, onDelete }) => (
   <Grid fluid>
@@ -10,7 +11,7 @@ export const Message = ({ message, onSelect, onDelete }) => (
       <Col xs={3}><Avatar path={message.user.profilePic} /></Col>
       <Col xs={9}>
         <p>{message.user.name}</p>
-        <p>{message.timestamp}</p>
+        <p><Timestamp timestamp={message.timestamp} /></p>
       </Col>
     </Row>
     <Row>
