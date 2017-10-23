@@ -1,23 +1,9 @@
 import React from 'react';
 import Waypoint from 'react-waypoint';
-import { ThemeProvider } from 'styled-components';
 import { createMockMessage, transformFromAppSpot } from '../schema/transformer';
 
 import Header from '../components/Header';
 import Messages from '../components/Messages';
-
-const theme = {
-  flexboxgrid: {
-    gutterWidth: 0, // rem
-    outerMargin: 0, // rem
-    // breakpoints: {
-    //   xs: 0,  // em
-    //   sm: 48, // em
-    //   md: 64, // em
-    //   lg: 75, // em
-    // },
-  },
-};
 
 class App extends React.Component {
   constructor() {
@@ -26,16 +12,32 @@ class App extends React.Component {
       messages: [
       ],
       loaded: false,
+      isFetching: true,
       error: false,
     };
   }
 
   componentDidMount() {
     this.requestMessages();
+
+    window.addEventListener('scroll', (e) => {
+      console.log((window.innerHeight + window.scrollY) - this.$el.offsetHeight);
+      if (this.state.isFetching) {
+        return;
+      }
+      if (this.$el.offsetHeight - (window.innerHeight + window.scrollY) < 400) {
+        this.requestMessages();
+      }
+    });
   }
 
   requestMessages() {
-    const url = `http://message-list.appspot.com/messages?limit=5${this.token ? `&pageToken=${this.token}` : ''}`;
+    const url = `http://message-list.appspot.com/messages?limit=15${this.token ? `&pageToken=${this.token}` : ''}`;
+
+    this.setState({
+      isFetching: true,
+    });
+
     fetch(url)
       .then(response => response.json())
       .then((response) => {
@@ -44,6 +46,7 @@ class App extends React.Component {
         this.setState({
           messages: [...this.state.messages, ...newMessages],
           loaded: true,
+          isFetching: false,
         });
       })
       .catch(() => {
@@ -68,20 +71,10 @@ class App extends React.Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <div>
-          <Header />
-          <Messages messages={this.state.messages} onDelete={messageId => this.deleteMessage(messageId)} />
-          {this.state.loaded && (
-            <Waypoint
-              scrollableAncestor={window}
-              onEnter={() => this.requestMessages()}
-            >
-              <div style={{ marginBottom: '50vh' }}>&nbsp;</div>
-            </Waypoint>
-          )}
-        </div>
-      </ThemeProvider>
+      <div ref={(el) => { this.$el = el; }}>
+        <Header />
+        <Messages messages={this.state.messages} onDelete={messageId => this.deleteMessage(messageId)} />
+      </div>
     );
   }
 }
