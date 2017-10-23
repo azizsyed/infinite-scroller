@@ -5,8 +5,6 @@ import { createMockMessage } from '../schema/transformer';
 import Header from '../components/Header';
 import Messages from '../components/Messages';
 
-import request from 'request';
-
 const theme = {
   flexboxgrid: {
     gutterWidth: 0, // rem
