@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { HEADER_HEIGHT } from '../../constants/styles';
+import {
+  HEADER_COLOR,
+  HEADER_HEIGHT,
+} from '../../constants/styles';
 
 const H1 = styled.h1`
   font-size: 20px;
@@ -49,7 +52,7 @@ const Icon = () => (
 
 const Header = styled.header`
   position: fixed;
-  background: #673ab7;
+  background: ${HEADER_COLOR};
   height: ${HEADER_HEIGHT};
   top: 0;
   width: 100vw;

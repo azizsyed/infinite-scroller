@@ -1,13 +1,11 @@
 import React from 'react';
-import Waypoint from 'react-waypoint';
-import { createMockMessage, transformFromAppSpot } from '../schema/transformer';
-
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+import { transformFromAppSpot } from '../schema/transformer';
 import Header from '../components/Header';
 import Messages from '../components/Messages';
 
-import { Observable, Subscription } from 'rxjs/Rx';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
 
 class App extends React.Component {
   constructor() {
@@ -77,10 +75,23 @@ class App extends React.Component {
   }
 
   render() {
+    const { error } = this.state;
+    let output = null;
+    if (error) {
+      output = <h1>Error :(</h1>;
+    } else {
+      output = (
+        <Messages
+          messages={this.state.messages}
+          onDelete={messageId => this.deleteMessage(messageId)}
+        />
+      );
+    }
+
     return (
       <div ref={(el) => { this.$el = el; }}>
         <Header />
-        <Messages messages={this.state.messages} onDelete={messageId => this.deleteMessage(messageId)} />
+        { output }
       </div>
     );
   }
