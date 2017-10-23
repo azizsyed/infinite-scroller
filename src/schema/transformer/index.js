@@ -11,8 +11,8 @@ export const createMockMessage = message => new Message({
 
 export const transformFromAppSpot = messages => (
   messages.map(message => new Message({
-    timestamp: moment(message.updated),
-    id: message.id,
+    timestamp: message.updated,
+    id: message.id.toString(),
     content: message.content,
     user: {
       name: message.author.name,

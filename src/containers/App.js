@@ -13,10 +13,8 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      messages: [
-      ],
-      loaded: false,
-      isFetching: true,
+      messages: [],
+      isFetching: false,
       error: false,
     };
   }
@@ -29,13 +27,16 @@ class App extends React.Component {
       .map(evt => (
         this.$el.offsetHeight - (evt.currentTarget.innerHeight + evt.currentTarget.scrollY)
       ))
-      .throttle(() => Observable.timer(500))
-      .filter(diff => diff < 400);
+      .debounce(() => Observable.timer(10))
+      .filter(diff => diff < 200);
 
     scrolling.subscribe(() => this.requestMessages());
   }
 
   requestMessages() {
+    if (this.state.isFetching) {
+      return;
+    }
     const url = `http://message-list.appspot.com/messages?limit=5${this.token ? `&pageToken=${this.token}` : ''}`;
 
     this.setState({
@@ -49,12 +50,14 @@ class App extends React.Component {
         this.token = response.pageToken;
         this.setState({
           messages: [...this.state.messages, ...newMessages],
-          loaded: true,
           isFetching: false,
         });
       })
       .catch(() => {
-        alert('error!');
+        this.setState({
+          isFetching: false,
+          error: 'there was an error fetching messages...',
+        });
       });
   }
 
