@@ -16,7 +16,7 @@ const IconWrapper = styled.div`
   display: inline-block;
   height: 12px;
   width: 18px;
-  margin-right: 29px;
+  margin-right: 36px;
 `;
 
 const HamburgerBar = (height, top, background) => `
