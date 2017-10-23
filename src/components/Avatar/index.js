@@ -18,6 +18,7 @@ export const Avatar = ({ name, profilePic, size }) => (
 Avatar.propTypes = {
   name: PropTypes.string.isRequired,
   profilePic: PropTypes.string.isRequired,
+  size: PropTypes.number.isRequired,
 };
 
 export default Avatar;

@@ -56,7 +56,7 @@ const MaxLen = (props) => {
   } = props;
 
   if (children.length > max) {
-    return children.substr(0, max)+'....';
+    return `${children.substr(0, max)}....`;
   }
 
   return children;
