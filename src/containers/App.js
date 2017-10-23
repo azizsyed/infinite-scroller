@@ -5,6 +5,10 @@ import { createMockMessage, transformFromAppSpot } from '../schema/transformer';
 import Header from '../components/Header';
 import Messages from '../components/Messages';
 
+import { Observable, Subscription } from 'rxjs/Rx';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/operator/map';
+
 class App extends React.Component {
   constructor() {
     super();
@@ -20,19 +24,19 @@ class App extends React.Component {
   componentDidMount() {
     this.requestMessages();
 
-    window.addEventListener('scroll', (e) => {
-      console.log((window.innerHeight + window.scrollY) - this.$el.offsetHeight);
-      if (this.state.isFetching) {
-        return;
-      }
-      if (this.$el.offsetHeight - (window.innerHeight + window.scrollY) < 400) {
-        this.requestMessages();
-      }
-    });
+    const scrolling = Observable
+      .fromEvent(window, 'scroll')
+      .map(evt => (
+        this.$el.offsetHeight - (evt.currentTarget.innerHeight + evt.currentTarget.scrollY)
+      ))
+      .throttle(() => Observable.timer(500))
+      .filter(diff => diff < 400);
+
+    scrolling.subscribe(() => this.requestMessages());
   }
 
   requestMessages() {
-    const url = `http://message-list.appspot.com/messages?limit=15${this.token ? `&pageToken=${this.token}` : ''}`;
+    const url = `http://message-list.appspot.com/messages?limit=5${this.token ? `&pageToken=${this.token}` : ''}`;
 
     this.setState({
       isFetching: true,
