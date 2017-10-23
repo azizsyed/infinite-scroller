@@ -9,7 +9,6 @@ const MessageWrapper = styled.div`
 
 export const Messages = ({ messages }) => (
   <MessageWrapper>
-    <h2>===== MESSAGES START =====</h2>
     {
       messages.map(message => <Message key={message.id} onSelect={(e) => {
         e.preventDefault;
@@ -21,7 +20,6 @@ export const Messages = ({ messages }) => (
         return false;
       }} message={message} />)
     }
-    <h2>===== MESSAGES END =====</h2>
   </MessageWrapper>
 );
 

@@ -20,7 +20,7 @@ const Icon = styled.span`
 
 const Header = styled.header`
   position: fixed;
-  background: purple;
+  background: #673ab7;
   height: ${HEADER_HEIGHT};
   top: 0;
   width: 100vw;

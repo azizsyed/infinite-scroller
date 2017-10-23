@@ -9,4 +9,15 @@ export const createMockMessage = message => new Message({
   user: message.user,
 });
 
+export const transformFromAppSpot = messages => (
+  messages.map(message => new Message({
+    timestamp: moment(message.timestamp),
+    id: message.id,
+    content: message.content,
+    user: {
+      name: message.author.name,
+      profilePic: `http://message-list.appspot.com${message.author.photoUrl}`,
+    },
+  })));
+
 export default () => {};
