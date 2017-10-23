@@ -117,7 +117,15 @@ class Message extends React.Component {
 }
 
 Message.propTypes = {
-  message: PropTypes.object.isRequired,
+  message: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    timestamp: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      profilePic: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 

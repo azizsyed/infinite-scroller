@@ -1,6 +1,7 @@
 import React from 'react';
-import Message from '../Message';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import Message from '../Message';
 import { HEADER_HEIGHT } from '../../constants/styles';
 
 const MessageWrapper = styled.div`
@@ -20,5 +21,18 @@ export const Messages = ({ messages, onDelete }) => (
     }
   </MessageWrapper>
 );
+
+Messages.propTypes = {
+  onDelete: PropTypes.func.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    timestamp: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    user: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      profilePic: PropTypes.string.isRequired,
+    }),
+  })).isRequired,
+};
 
 export default Messages;
