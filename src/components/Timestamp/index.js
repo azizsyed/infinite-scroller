@@ -16,7 +16,19 @@ class Timestamp extends Component {
   }
 
   componentDidMount() {
-    this.timer = setInterval(() => this.updateSince(), 200);
+    if (this.props.isActive) {
+      this.startTimer();
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isActive !== this.props.isActive) {
+      if (nextProps.isActive) {
+        this.startTimer();
+      } else {
+        this.endTimer();
+      }
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -28,6 +40,15 @@ class Timestamp extends Component {
   }
 
   componentWillUnmount() {
+    this.endTimer();
+  }
+
+  startTimer() {
+    // debugger;
+    this.timer = setInterval(() => this.updateSince(), 1000 * 30);
+  }
+
+  endTimer() {
     clearInterval(this.timer);
   }
 
@@ -53,6 +74,7 @@ class Timestamp extends Component {
 }
 
 Timestamp.propTypes = {
+  isActive: PropTypes.bool.isRequired,
   timestamp: PropTypes.string.isRequired,
 };
 

@@ -1,5 +1,4 @@
 import React from 'react';
-// import WaypointNew from 'waypoints';
 import Waypoint from 'react-waypoint';
 import { ThemeProvider } from 'styled-components';
 import { createMockMessage, transformFromAppSpot } from '../schema/transformer';

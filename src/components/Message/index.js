@@ -67,6 +67,7 @@ class Message extends React.Component {
     super(props);
     this.handleOnSwipedLeft = this.handleOnSwipedLeft.bind(this);
     this.state = {
+      isActive: true,
     };
   }
 
@@ -75,30 +76,42 @@ class Message extends React.Component {
   }
 
   handleOnSwipedLeft(e, deltaX, complete) {
-    // console.log(`You Swiped LEFT: ${deltaX} | ${complete}`);
     if (complete) {
       this.remove();
     }
   }
 
+  toggleActive(isActive) {
+    this.setState({
+      isActive,
+    });
+  }
+
   render() {
     const { message } = this.props;
+    const { isActive } = this.state;
 
     return (
-      <MessageWrapper>
-        <Swipeable
-          onSwipedLeft={this.handleOnSwipedLeft}
-        >
-          <Row>
-            <Avatar size={40} profilePic={message.user.profilePic} name={message.user.name} />
-            <Header>
-              <Title>{message.user.name} ({message.id})</Title>
-              <Subtitle><Timestamp timestamp={message.timestamp} /></Subtitle>
-            </Header>
-          </Row>
-          <Content><MaxLen max={200}>{message.content}</MaxLen></Content>
-        </Swipeable>
-      </MessageWrapper>
+      <Waypoint
+        onEnter={() => this.toggleActive(true)}
+        onLeave={() => this.toggleActive(false)}
+        fireOnRapidScroll={false}
+      >
+        <MessageWrapper>
+          <Swipeable
+            onSwipedLeft={this.handleOnSwipedLeft}
+          >
+            <Row>
+              <Avatar size={40} profilePic={message.user.profilePic} name={message.user.name} />
+              <Header>
+                <Title>{message.user.name} ({message.id})</Title>
+                <Subtitle><Timestamp timestamp={message.timestamp} isActive={isActive} /></Subtitle>
+              </Header>
+            </Row>
+            <Content><MaxLen max={200}>{message.content}</MaxLen></Content>
+          </Swipeable>
+        </MessageWrapper>
+      </Waypoint>
     );
   }
 }
