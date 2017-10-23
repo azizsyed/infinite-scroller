@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
-import { createMockMessage } from '../schema/transformer';
+import { createMockMessage, transformFromAppSpot } from '../schema/transformer';
 
 import Header from '../components/Header';
 import Messages from '../components/Messages';
@@ -23,55 +23,6 @@ class App extends React.Component {
     super();
     this.state = {
       messages: [
-        createMockMessage({
-          user: {
-            name: 'Name',
-            profilePic: '/some/path',
-          },
-          content: 'hey yo!',
-        }),
-        createMockMessage({
-          user: {
-            name: 'Name2',
-            profilePic: '/some/path',
-          },
-          content: 'hey yo 2!',
-        }),
-        createMockMessage({
-          user: {
-            name: 'Name3',
-            profilePic: '/some/path',
-          },
-          content: 'hey yo 3!',
-        }),
-        createMockMessage({
-          user: {
-            name: 'Name3',
-            profilePic: '/some/path',
-          },
-          content: 'hey yo 3!',
-        }),
-        createMockMessage({
-          user: {
-            name: 'Name3',
-            profilePic: '/some/path',
-          },
-          content: 'hey yo 3!',
-        }),
-        createMockMessage({
-          user: {
-            name: 'Name3',
-            profilePic: '/some/path',
-          },
-          content: 'hey yo 3!',
-        }),
-        createMockMessage({
-          user: {
-            name: 'Name3',
-            profilePic: '/some/path',
-          },
-          content: 'hey yo 3!',
-        }),
       ],
     };
   }
@@ -85,7 +36,19 @@ class App extends React.Component {
   }
 
   requestMessages() {
-
+    const url = `http://message-list.appspot.com/messages${this.token ? `?pageToken=${this.token}` : ''}`;
+    fetch(url)
+      .then(response => response.json())
+      .then((response) => {
+        const newMessages = transformFromAppSpot(response.messages);
+        this.token = response.pageToken;
+        this.setState({
+          messages: [...this.state.messages, ...newMessages],
+        });
+      })
+      .catch((e) => {
+        alert('error!');
+      });
   }
 
   render() {
