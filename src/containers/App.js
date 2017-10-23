@@ -1,4 +1,6 @@
 import React from 'react';
+// import WaypointNew from 'waypoints';
+import Waypoint from 'react-waypoint';
 import { ThemeProvider } from 'styled-components';
 import { createMockMessage, transformFromAppSpot } from '../schema/transformer';
 
@@ -24,11 +26,9 @@ class App extends React.Component {
     this.state = {
       messages: [
       ],
+      loaded: false,
+      error: false,
     };
-  }
-
-  shouldComponentUpdate() {
-    return true;
   }
 
   componentDidMount() {
@@ -36,7 +36,7 @@ class App extends React.Component {
   }
 
   requestMessages() {
-    const url = `http://message-list.appspot.com/messages${this.token ? `?pageToken=${this.token}` : ''}`;
+    const url = `http://message-list.appspot.com/messages?limit=5${this.token ? `&pageToken=${this.token}` : ''}`;
     fetch(url)
       .then(response => response.json())
       .then((response) => {
@@ -44,11 +44,27 @@ class App extends React.Component {
         this.token = response.pageToken;
         this.setState({
           messages: [...this.state.messages, ...newMessages],
+          loaded: true,
         });
       })
-      .catch((e) => {
+      .catch(() => {
         alert('error!');
       });
+  }
+
+  deleteMessage(messageId) {
+    const { messages } = this.state;
+    const matchedMessage = messages.find(message => message.id === messageId);
+    const matchedIndex = messages.indexOf(matchedMessage);
+
+    if (matchedIndex !== -1) {
+      const newMessages = messages.slice();
+      newMessages.splice(matchedIndex, 1);
+
+      this.setState({
+        messages: newMessages,
+      });
+    }
   }
 
   render() {
@@ -56,7 +72,15 @@ class App extends React.Component {
       <ThemeProvider theme={theme}>
         <div>
           <Header />
-          <Messages messages={this.state.messages} />
+          <Messages messages={this.state.messages} onDelete={messageId => this.deleteMessage(messageId)} />
+          {this.state.loaded && (
+            <Waypoint
+              scrollableAncestor={window}
+              onEnter={() => this.requestMessages()}
+            >
+              <div style={{ marginBottom: '50vh' }}>&nbsp;</div>
+            </Waypoint>
+          )}
         </div>
       </ThemeProvider>
     );

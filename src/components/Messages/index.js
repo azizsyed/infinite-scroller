@@ -7,18 +7,16 @@ const MessageWrapper = styled.div`
   padding-top: ${HEADER_HEIGHT};
 `;
 
-export const Messages = ({ messages }) => (
+export const Messages = ({ messages, onDelete }) => (
   <MessageWrapper>
     {
-      messages.map(message => <Message key={message.id} onSelect={(e) => {
-        e.preventDefault;
-        console.log('select: ', e);
-        return false;
-      }} onDelete={(e) => {
-        e.preventDefault;
-        console.log('delete: ', e);
-        return false;
-      }} message={message} />)
+      messages.map(message => (
+        <Message
+          key={message.id}
+          onDelete={onDelete}
+          message={message}
+        />
+      ))
     }
   </MessageWrapper>
 );
