@@ -22,6 +22,7 @@ const defaultState = {
   ],
   error: false,
   isFetching: false,
+  apiToken: null,
 };
 
 // REDUCER
@@ -36,7 +37,8 @@ const reducer = (state, action) => {
     case ADD_MESSAGES:
       return {
         ...state,
-        messages: state.messages.concat(action.payload),
+        messages: state.messages.concat(action.payload.messages),
+        apiToken: action.payload.apiToken,
         isFetching: false,
       };
     case DELETE_MESSAGE:
@@ -65,17 +67,17 @@ export const enhance =
     withReducer('messageData', 'dispatch', reducer, defaultState),
     withHandlers({
       dispatchRequestMessages: props => () => {
-        const { dispatch } = props;
+        const { dispatch, messageData } = props;
 
-        if (props.messageData.isFetching) {
+        if (messageData.isFetching) {
           return;
         }
 
         dispatch(isFetchingMessages());
 
-        fetchMessagesService(COUNT)
-          .then((messages) => {
-            dispatch(addMessages(messages));
+        fetchMessagesService(COUNT, messageData.apiToken)
+          .then((response) => {
+            dispatch(addMessages(response));
           })
           .catch(() => {
             dispatch(errorMessages('there was an error fetching messages...'));
