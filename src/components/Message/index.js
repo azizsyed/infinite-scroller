@@ -9,7 +9,6 @@ import Timestamp from '../Timestamp';
 
 const MessageWrapper = styled.div`
   border-bottom: 1px solid #e5e5e5;
-  padding: 15px 17px 18px;
 
   &:first-child{
     margin-top: 9px;
@@ -18,6 +17,10 @@ const MessageWrapper = styled.div`
   &:last-child{
     border-bottom: none;
   }
+`;
+
+const InnerMessageWrapper = styled.div`
+  padding: 15px 17px 18px;
 `;
 
 const P = styled.p`
@@ -96,11 +99,12 @@ class Message extends React.Component {
     const { isActive } = this.state;
 
     return (
+      <MessageWrapper>
         <SwipeableViews
           onChangeIndex={() => {
             this.setState({
               deleted: true,
-            })
+            });
           }}
           onTransitionEnd={() => {
             if (this.state.deleted) {
@@ -108,8 +112,13 @@ class Message extends React.Component {
             }
           }}
         >
-          <MessageWrapper>
+          <InnerMessageWrapper>
             <Row>
+              <Waypoint
+                onEnter={() => this.toggleActive(true)}
+                onLeave={() => this.toggleActive(false)}
+                fireOnRapidScroll={false}
+              />
               <Avatar size={40} profilePic={message.user.profilePic} name={message.user.name} />
               <Header>
                 <Title>{message.user.name} ({message.id})</Title>
@@ -117,9 +126,10 @@ class Message extends React.Component {
               </Header>
             </Row>
             <Content><MaxLen max={200}>{message.content}</MaxLen></Content>
-          </MessageWrapper>
+          </InnerMessageWrapper>
           <div>&nbsp;</div>
         </SwipeableViews>
+      </MessageWrapper>
     );
   }
 }

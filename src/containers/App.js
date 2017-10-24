@@ -2,9 +2,11 @@ import React from 'react';
 import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
-import { transformFromAppSpot } from '../schema/transformer';
 import Header from '../components/Header';
 import Messages from '../components/Messages';
+import REQUEST from '../services';
+
+const COUNT = 10;
 
 class App extends React.Component {
   constructor() {
@@ -25,7 +27,7 @@ class App extends React.Component {
         this.$el.offsetHeight - (evt.currentTarget.innerHeight + evt.currentTarget.scrollY)
       ))
       .debounce(() => Observable.timer(10))
-      .filter(diff => diff < 200);
+      .filter(diff => diff < 400);
 
     scrolling.subscribe(() => this.requestMessages());
   }
@@ -34,19 +36,15 @@ class App extends React.Component {
     if (this.state.isFetching) {
       return;
     }
-    const url = `http://message-list.appspot.com/messages?limit=5${this.token ? `&pageToken=${this.token}` : ''}`;
 
     this.setState({
       isFetching: true,
     });
 
-    fetch(url)
-      .then(response => response.json())
-      .then((response) => {
-        const newMessages = transformFromAppSpot(response.messages);
-        this.token = response.pageToken;
+    REQUEST(COUNT)
+      .then((messages) => {
         this.setState({
-          messages: [...this.state.messages, ...newMessages],
+          messages: [...this.state.messages, ...messages],
           isFetching: false,
         });
       })

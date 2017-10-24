@@ -60,6 +60,7 @@ const Header = styled.header`
   display: flex;
   align-items: center;
   box-shadow: -5px 0px 15px black;
+  z-index: 1;
 `;
 
 export default () => (
