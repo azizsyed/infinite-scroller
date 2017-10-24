@@ -1,9 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
 import PropTypes from 'prop-types';
-// import SwipeToDelete from 'react-swipe-to-delete-component';
-import Swipeable from 'react-swipeable';
+import SwipeableViews from 'react-swipeable-views';
 import Waypoint from 'react-waypoint';
+import styled from 'styled-components';
 import Avatar from '../Avatar';
 import Timestamp from '../Timestamp';
 
@@ -66,13 +65,10 @@ const MaxLen = (props) => {
   return children;
 };
 
-
-import SwipeableViews from 'react-swipeable-views';
-
 class Message extends React.Component {
   constructor(props) {
     super(props);
-    this.handleOnSwipedLeft = this.handleOnSwipedLeft.bind(this);
+    this.handleOnSwiped = this.handleOnSwiped.bind(this);
     this.state = {
       isActive: true,
     };
@@ -82,9 +78,15 @@ class Message extends React.Component {
     this.props.onDelete(this.props.message.id);
   }
 
-  handleOnSwipedLeft(e, deltaX, complete) {
-    if (complete) {
-      this.remove();
+  handleOnSwiped() {
+    this.setState({
+      deleted: true,
+    });
+  }
+
+  handleOnDelete() {
+    if (this.state.deleted) {
+      this.props.onDelete(this.props.message.id);
     }
   }
 
@@ -101,16 +103,8 @@ class Message extends React.Component {
     return (
       <MessageWrapper>
         <SwipeableViews
-          onChangeIndex={() => {
-            this.setState({
-              deleted: true,
-            });
-          }}
-          onTransitionEnd={() => {
-            if (this.state.deleted) {
-              this.props.onDelete(this.props.message.id);
-            }
-          }}
+          onChangeIndex={() => this.handleOnSwiped()}
+          onTransitionEnd={() => this.handleOnDelete()}
         >
           <InnerMessageWrapper>
             <Row>
@@ -119,9 +113,9 @@ class Message extends React.Component {
                 onLeave={() => this.toggleActive(false)}
                 fireOnRapidScroll={false}
               />
-              <Avatar size={40} profilePic={message.user.profilePic} name={message.user.name} />
+              <Avatar size={40} src={message.user.profilePic} alt={message.user.name} />
               <Header>
-                <Title>{message.user.name} ({message.id})</Title>
+                <Title>{message.user.name}</Title>
                 <Subtitle><Timestamp timestamp={message.timestamp} isActive={isActive} /></Subtitle>
               </Header>
             </Row>

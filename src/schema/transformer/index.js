@@ -19,5 +19,3 @@ export const transformFromAppSpot = messages => (
       profilePic: `http://message-list.appspot.com${message.author.photoUrl}`,
     },
   })));
-
-export default () => {};
