@@ -44,7 +44,6 @@ class Timestamp extends Component {
   }
 
   startTimer() {
-    // debugger;
     this.timer = setInterval(() => this.updateSince(), 1000 * 30);
   }
 
@@ -64,8 +63,6 @@ class Timestamp extends Component {
 
   render() {
     const { formatter } = this.state;
-
-    // const formatted = props.timestamp.format('dddd, MMMM Do YYYY, h:mm:ss a');
 
     return (
       <span>{formatter}</span>

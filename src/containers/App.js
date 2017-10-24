@@ -1,12 +1,18 @@
 import React from 'react';
-import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
+import Waypoint from 'react-waypoint';
+import styled from 'styled-components';
 import Header from '../components/Header';
 import Messages from '../components/Messages';
-import REQUEST from '../services';
+import fetchMessagesService from '../services';
 
 const COUNT = 10;
+
+const Spacer = styled.div`
+  height: 50vh;
+  background-color: transparent;
+  margin-top: -50vh;
+  z-index: 0;
+`;
 
 class App extends React.Component {
   constructor() {
@@ -21,15 +27,26 @@ class App extends React.Component {
   componentDidMount() {
     this.requestMessages();
 
-    const scrolling = Observable
-      .fromEvent(window, 'scroll')
-      .map(evt => (
-        this.$el.offsetHeight - (evt.currentTarget.innerHeight + evt.currentTarget.scrollY)
-      ))
-      .debounce(() => Observable.timer(10))
-      .filter(diff => diff < 400);
+    // window.TEST = this.requestMessages.bind(this);
 
-    scrolling.subscribe(() => this.requestMessages());
+    // const scrolling = Observable
+    //   .fromEvent(window, 'scroll')
+    //   .map(evt => (
+    //     this.$el.offsetHeight - (evt.currentTarget.innerHeight + evt.currentTarget.scrollY)
+    //   ))
+    //   .debounce(() => Observable.timer(10))
+    //   .filter(diff => diff < 400);
+
+    // scrolling.subscribe(() => this.requestMessages());
+  }
+
+  componentDidUpdate() {
+    if (!this.state.messages.length) {
+      return;
+    }
+    if (window.innerHeight > document.body.clientHeight) {
+      this.requestMessages();
+    }
   }
 
   requestMessages() {
@@ -41,7 +58,7 @@ class App extends React.Component {
       isFetching: true,
     });
 
-    REQUEST(COUNT)
+    fetchMessagesService(COUNT)
       .then((messages) => {
         this.setState({
           messages: [...this.state.messages, ...messages],
@@ -89,6 +106,10 @@ class App extends React.Component {
       <div ref={(el) => { this.$el = el; }}>
         <Header />
         { output }
+        { this.state.isFetching && <h2>Loading...(you should not see this!)</h2> }
+        <Waypoint onEnter={() => this.requestMessages()}>
+          <Spacer />
+        </Waypoint>
       </div>
     );
   }

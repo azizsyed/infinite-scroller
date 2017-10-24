@@ -11,13 +11,13 @@ const Image = styled.img`
 const CircleBlockImage = styled(Image)`
 `;
 
-export const Avatar = ({ name, profilePic, size }) => (
-  <CircleBlockImage src={profilePic} size={size} alt={name} />
+export const Avatar = ({ alt, src, size }) => (
+  <CircleBlockImage src={src} size={size} alt={alt} />
 );
 
 Avatar.propTypes = {
-  name: PropTypes.string.isRequired,
-  profilePic: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  src: PropTypes.string.isRequired,
   size: PropTypes.number.isRequired,
 };
 
