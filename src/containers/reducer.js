@@ -76,12 +76,8 @@ export const enhance =
         dispatch(isFetchingMessages());
 
         fetchMessagesService(COUNT, messageData.apiToken)
-          .then((response) => {
-            dispatch(addMessages(response));
-          })
-          .catch(() => {
-            dispatch(errorMessages('there was an error fetching messages...'));
-          });
+          .then(response => dispatch(addMessages(response)))
+          .catch(() => dispatch(errorMessages('Unable to fetch messages...')));
       },
       dispatchDeleteMessage: props => (message) => {
         const { dispatch, messageData } = props;

@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Waypoint from 'react-waypoint';
-import styled from 'styled-components';
+import Error from '../components/Error';
 import Header from '../components/Header';
 import Messages from '../components/Messages';
+import Loader from '../components/Loader';
+import Spacer from '../components/Spacer';
 import { enhance } from './reducer';
-
-const Spacer = styled.div`
-  height: 50vh;
-  background-color: transparent;
-  margin-top: -50vh;
-  z-index: 0;
-`;
 
 class App extends Component {
   componentDidUpdate() {
@@ -32,23 +27,15 @@ class App extends Component {
     const { messageData } = this.props;
     const { error, isFetching, messages } = messageData;
 
-    let output = null;
-    if (error) {
-      output = <h2>Error :(</h2>;
-    } else {
-      output = (
+    return (
+      <div ref={(el) => { this.$el = el; }}>
+        <Header />
         <Messages
           messages={messages}
           onDelete={messageId => this.deleteMessage(messageId)}
         />
-      );
-    }
-
-    return (
-      <div ref={(el) => { this.$el = el; }}>
-        <Header />
-        { output }
-        { isFetching && <h2>Loading...(you should not see this!)</h2> }
+        { isFetching && <Loader /> }
+        { error && <Error>{error}</Error>}
         <Waypoint onEnter={() => this.requestMessages()}>
           <Spacer />
         </Waypoint>
