@@ -5,6 +5,9 @@ import Header from '../components/Header';
 import Messages from '../components/Messages';
 import fetchMessagesService from '../services';
 
+import { withReducer } from 'recompose';
+import { enhance } from './reducer';
+
 const COUNT = 10;
 
 const Spacer = styled.div`
@@ -15,33 +18,12 @@ const Spacer = styled.div`
 `;
 
 class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      messages: [],
-      isFetching: false,
-      error: false,
-    };
-  }
-
   componentDidMount() {
     this.requestMessages();
-
-    // window.TEST = this.requestMessages.bind(this);
-
-    // const scrolling = Observable
-    //   .fromEvent(window, 'scroll')
-    //   .map(evt => (
-    //     this.$el.offsetHeight - (evt.currentTarget.innerHeight + evt.currentTarget.scrollY)
-    //   ))
-    //   .debounce(() => Observable.timer(10))
-    //   .filter(diff => diff < 400);
-
-    // scrolling.subscribe(() => this.requestMessages());
   }
 
   componentDidUpdate() {
-    if (!this.state.messages.length) {
+    if (!this.props.messageData.messages.length) {
       return;
     }
     if (window.innerHeight > document.body.clientHeight) {
@@ -50,53 +32,26 @@ class App extends React.Component {
   }
 
   requestMessages() {
-    if (this.state.isFetching) {
-      return;
-    }
-
-    this.setState({
-      isFetching: true,
-    });
-
-    fetchMessagesService(COUNT)
-      .then((messages) => {
-        this.setState({
-          messages: [...this.state.messages, ...messages],
-          isFetching: false,
-        });
-      })
-      .catch(() => {
-        this.setState({
-          isFetching: false,
-          error: 'there was an error fetching messages...',
-        });
-      });
+    this.props.dispatchRequestMessages();
   }
 
   deleteMessage(messageId) {
-    const { messages } = this.state;
-    const matchedMessage = messages.find(message => message.id === messageId);
-    const matchedIndex = messages.indexOf(matchedMessage);
-
-    if (matchedIndex !== -1) {
-      const newMessages = messages.slice();
-      newMessages.splice(matchedIndex, 1);
-
-      this.setState({
-        messages: newMessages,
-      });
-    }
+    this.props.dispatchDeleteMessage(messageId);
   }
 
   render() {
-    const { error } = this.state;
+    const { messageData } = this.props;
+    const { error, isFetching, messages } = messageData;
+
+    console.log('rendering!');
+
     let output = null;
     if (error) {
-      output = <h1>Error :(</h1>;
+      output = <h2>Error :(</h2>;
     } else {
       output = (
         <Messages
-          messages={this.state.messages}
+          messages={messages}
           onDelete={messageId => this.deleteMessage(messageId)}
         />
       );
@@ -106,7 +61,7 @@ class App extends React.Component {
       <div ref={(el) => { this.$el = el; }}>
         <Header />
         { output }
-        { this.state.isFetching && <h2>Loading...(you should not see this!)</h2> }
+        { isFetching && <h2>Loading...(you should not see this!)</h2> }
         <Waypoint onEnter={() => this.requestMessages()}>
           <Spacer />
         </Waypoint>
@@ -115,4 +70,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default enhance(App);
