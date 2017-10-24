@@ -6,7 +6,7 @@ export const requestMessages = createAction('REQUEST_MESSAGES');
 export const isFetchingMessages = createAction('IS_FETCHING_MESSAGES');
 export const addMessages = createAction('ADD_MESSAGES');
 export const errorMessages = createAction('ERROR_MESSAGES');
-
+export const deleteMessage = createAction('DELETE_MESSAGE');
 
 // STATE
 const defaultState = {
@@ -31,6 +31,12 @@ const reducer = (state, action) => {
       return {
         ...state,
         messages: state.messages.concat(action.payload),
+        isFetching: false,
+      };
+    case 'DELETE_MESSAGE':
+      return {
+        ...state,
+        messages: [...state.messages.slice(0, action.payload), ...state.messages.slice(action.payload + 1)],
         isFetching: false,
       };
     case 'ERROR_MESSAGES':
@@ -67,20 +73,10 @@ export const enhance =
             dispatch(errorMessages('there was an error fetching messages...'));
           });
       },
-      dispatchDeleteMessage: props => (messageId) => {
-        alert('delete');
-        // const { messages } = this.state;
-        // const matchedMessage = messages.find(message => message.id === messageId);
-        // const matchedIndex = messages.indexOf(matchedMessage);
-
-        // if (matchedIndex !== -1) {
-        //   const newMessages = messages.slice();
-        //   newMessages.splice(matchedIndex, 1);
-
-        //   this.setState({
-        //     messages: newMessages,
-        //   });
-        // }
+      dispatchDeleteMessage: props => (message) => {
+        const { dispatch, messageData } = props;
+        const matchedIndex = messageData.messages.indexOf(message);
+        dispatch(deleteMessage(matchedIndex));
       },
     }),
   );

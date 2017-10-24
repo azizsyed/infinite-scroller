@@ -1,14 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Waypoint from 'react-waypoint';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import Messages from '../components/Messages';
-import fetchMessagesService from '../services';
-
-import { withReducer } from 'recompose';
 import { enhance } from './reducer';
-
-const COUNT = 10;
 
 const Spacer = styled.div`
   height: 50vh;
@@ -17,15 +13,8 @@ const Spacer = styled.div`
   z-index: 0;
 `;
 
-class App extends React.Component {
-  componentDidMount() {
-    this.requestMessages();
-  }
-
+class App extends Component {
   componentDidUpdate() {
-    if (!this.props.messageData.messages.length) {
-      return;
-    }
     if (window.innerHeight > document.body.clientHeight) {
       this.requestMessages();
     }
@@ -42,8 +31,6 @@ class App extends React.Component {
   render() {
     const { messageData } = this.props;
     const { error, isFetching, messages } = messageData;
-
-    console.log('rendering!');
 
     let output = null;
     if (error) {
@@ -69,5 +56,15 @@ class App extends React.Component {
     );
   }
 }
+
+App.propTypes = {
+  dispatchDeleteMessage: PropTypes.func.isRequired,
+  dispatchRequestMessages: PropTypes.func.isRequired,
+  messageData: PropTypes.shape({
+    messages: PropTypes.array.isRequired,
+    isFetching: PropTypes.bool,
+    error: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  }).isRequired,
+};
 
 export default enhance(App);

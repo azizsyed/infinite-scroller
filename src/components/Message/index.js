@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SwipeableViews from 'react-swipeable-views';
 import Waypoint from 'react-waypoint';
@@ -65,7 +65,7 @@ const MaxLen = (props) => {
   return children;
 };
 
-class Message extends React.Component {
+class Message extends Component {
   constructor(props) {
     super(props);
     this.handleOnSwiped = this.handleOnSwiped.bind(this);
@@ -86,7 +86,7 @@ class Message extends React.Component {
 
   handleOnDelete() {
     if (this.state.deleted) {
-      this.props.onDelete(this.props.message.id);
+      this.props.onDelete(this.props.message);
     }
   }
 
