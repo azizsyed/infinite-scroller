@@ -2,11 +2,17 @@ import { compose, withReducer, withHandlers } from 'recompose';
 import { createAction } from 'redux-actions';
 import fetchMessagesService from '../services';
 
-export const requestMessages = createAction('REQUEST_MESSAGES');
-export const isFetchingMessages = createAction('IS_FETCHING_MESSAGES');
-export const addMessages = createAction('ADD_MESSAGES');
-export const errorMessages = createAction('ERROR_MESSAGES');
-export const deleteMessage = createAction('DELETE_MESSAGE');
+export const ADD_MESSAGES = 'ADD_MESSAGES';
+export const DELETE_MESSAGE = 'DELETE_MESSAGE';
+export const ERROR_MESSAGES = 'ERROR_MESSAGES';
+export const REQUEST_MESSAGES = 'REQUEST_MESSAGES';
+export const IS_FETCHING_MESSAGES = 'IS_FETCHING_MESSAGES';
+
+export const addMessages = createAction(ADD_MESSAGES);
+export const deleteMessage = createAction(DELETE_MESSAGE);
+export const errorMessages = createAction(ERROR_MESSAGES);
+export const requestMessages = createAction(REQUEST_MESSAGES);
+export const isFetchingMessages = createAction(IS_FETCHING_MESSAGES);
 
 // STATE
 const defaultState = {
@@ -21,25 +27,27 @@ const defaultState = {
 // REDUCER
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'IS_FETCHING_MESSAGES':
+    case IS_FETCHING_MESSAGES:
       return {
         ...state,
         isFetching: true,
         error: false,
       };
-    case 'ADD_MESSAGES':
+    case ADD_MESSAGES:
       return {
         ...state,
         messages: state.messages.concat(action.payload),
         isFetching: false,
       };
-    case 'DELETE_MESSAGE':
+    case DELETE_MESSAGE:
       return {
         ...state,
-        messages: [...state.messages.slice(0, action.payload), ...state.messages.slice(action.payload + 1)],
-        isFetching: false,
+        messages: [
+          ...state.messages.slice(0, action.payload),
+          ...state.messages.slice(action.payload + 1),
+        ],
       };
-    case 'ERROR_MESSAGES':
+    case ERROR_MESSAGES:
       return {
         ...state,
         isFetching: false,
