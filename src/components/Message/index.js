@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+// import SwipeToDelete from 'react-swipe-to-delete-component';
 import Swipeable from 'react-swipeable';
 import Waypoint from 'react-waypoint';
 import Avatar from '../Avatar';
@@ -62,6 +63,9 @@ const MaxLen = (props) => {
   return children;
 };
 
+
+import SwipeableViews from 'react-swipeable-views';
+
 class Message extends React.Component {
   constructor(props) {
     super(props);
@@ -92,15 +96,19 @@ class Message extends React.Component {
     const { isActive } = this.state;
 
     return (
-      <Waypoint
-        onEnter={() => this.toggleActive(true)}
-        onLeave={() => this.toggleActive(false)}
-        fireOnRapidScroll={false}
-      >
-        <MessageWrapper>
-          <Swipeable
-            onSwipedLeft={this.handleOnSwipedLeft}
-          >
+        <SwipeableViews
+          onChangeIndex={() => {
+            this.setState({
+              deleted: true,
+            })
+          }}
+          onTransitionEnd={() => {
+            if (this.state.deleted) {
+              this.props.onDelete(this.props.message.id);
+            }
+          }}
+        >
+          <MessageWrapper>
             <Row>
               <Avatar size={40} profilePic={message.user.profilePic} name={message.user.name} />
               <Header>
@@ -109,9 +117,9 @@ class Message extends React.Component {
               </Header>
             </Row>
             <Content><MaxLen max={200}>{message.content}</MaxLen></Content>
-          </Swipeable>
-        </MessageWrapper>
-      </Waypoint>
+          </MessageWrapper>
+          <div>&nbsp;</div>
+        </SwipeableViews>
     );
   }
 }

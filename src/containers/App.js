@@ -6,7 +6,6 @@ import { transformFromAppSpot } from '../schema/transformer';
 import Header from '../components/Header';
 import Messages from '../components/Messages';
 
-
 class App extends React.Component {
   constructor() {
     super();
